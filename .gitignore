@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node / Bun (optional adapters)
+node_modules/
+.bun/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+config/local.*
+
+# Generated media and render workspaces
+work/
+output/
+renders/
+assets/local/
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.srt
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
