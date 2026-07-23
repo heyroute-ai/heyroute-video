@@ -23,7 +23,7 @@
         ↓
 场景时间线（图片、PPT 页、文字、音频）
         ↓
-配音适配器（本地或云端）
+本地配音适配器（IndexTTS）
         ↓
 字幕生成与校对
         ↓
@@ -56,7 +56,31 @@ heyroute-video/
 
 ## 当前状态
 
-仓库目前处于方案和骨架阶段。第一阶段优先跑通“一份 manifest → 一条 9:16 旁白视频 + SRT + 发布包”，再扩展到批量调度、模板和平台适配器。
+仓库目前已具备 Phase 0/1 的可运行骨架：manifest 校验、JSON 事件、fake TTS、IndexTTS 适配、SRT/VTT 和 FFmpeg 9:16 渲染。第一阶段优先跑通“一份 manifest → 一条 9:16 旁白视频 + SRT + 发布包”，再扩展到模板和平台适配器。
+
+## 快速开始
+
+安装开发依赖：
+
+```powershell
+uv sync --extra dev
+```
+
+先用完全离线的 fake provider 验证整条流水线：
+
+```powershell
+uv run heyroute-video doctor --json
+uv run heyroute-video validate --manifest examples/news.yaml --json
+uv run heyroute-video build --manifest examples/news.yaml --json-events
+```
+
+产物默认位于 `examples/output/example-news/`。使用本地 IndexTTS 时，将 manifest 中的 `voice.provider` 改为 `indextts`，填写 `reference_audio`，然后先运行：
+
+```powershell
+uv run heyroute-video tts doctor --json
+```
+
+Agent 集成时使用 `--json` 获取最终对象，使用 `--json-events` 获取逐行进度。缺素材、FFmpeg 不可用或 IndexTTS 失败都会返回非零退出码和稳定错误码。发布包包含 `video.mp4`、`cover.png`、`audio.wav`、`subtitle.srt`、`subtitle.vtt`、`title.txt`、`description.txt`、`tags.txt`、`manifest.resolved.json` 和 `build-report.json`。
 
 ## 许可证
 
@@ -65,4 +89,3 @@ heyroute-video/
 ## 参与贡献
 
 欢迎提交 Issue、改进文档和不含私有凭据的通用工具。贡献前请先阅读 `PLAN.md`，涉及新平台、新模型或新许可证的改动请先开 Issue 讨论。
-

@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .venv/
 .pytest_cache/
+.pytest-tmp/
 .ruff_cache/
 
 # Node / Bun (optional adapters)
@@ -18,6 +19,7 @@ config/local.*
 # Generated media and render workspaces
 work/
 output/
+examples/output/
 renders/
 assets/local/
 *.mp4
@@ -31,4 +33,3 @@ assets/local/
 Thumbs.db
 .idea/
 .vscode/
-

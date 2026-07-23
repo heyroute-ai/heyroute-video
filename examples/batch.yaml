@@ -1,0 +1,21 @@
+version: 1
+profile: "vertical-news-1080x1920"
+voice:
+  provider: "fake"
+jobs:
+  - job_id: "batch-01"
+    scenes:
+      - id: "scene-01"
+        visual:
+          type: "color"
+          color: "#173f46"
+        voiceover:
+          text: "第一条批量任务。"
+  - job_id: "batch-02"
+    scenes:
+      - id: "scene-01"
+        visual:
+          type: "color"
+          color: "#f1c48b"
+        voiceover:
+          text: "第二条批量任务。"

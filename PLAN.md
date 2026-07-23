@@ -8,7 +8,7 @@
 
 - 读取结构化 manifest，管理素材、场景、旁白和输出
 - 将图片、PPT 页面、文字卡片和音频组合成时间线
-- 通过统一接口接入本地或云端 TTS
+- 通过统一接口接入本地 TTS，云端 provider 不在首版范围内
 - 生成/导入字幕并完成音画、尺寸、时长检查
 - 输出视频、封面、字幕、元数据和可追踪的构建报告
 - 为批量任务提供可恢复、可重跑的状态记录
@@ -65,39 +65,18 @@
 5. **先 CLI 后界面**：先把稳定的命令和数据结构做好，再决定是否加 dashboard。
 6. **平台是插件**：平台上传逻辑不能反向污染渲染内核。
 
-## 需要用户选择的决策
+## 已确定决策
 
-以下选项会影响 Phase 0 的实现顺序：
+- **技术栈**：Python 3.12，FFmpeg 负责媒体处理，CLI 面向 Agent。
+- **目标链路**：HeyNews 竖屏新闻视频，但核心 manifest 不绑定 HeyNews 的临时 JSON。
+- **输入**：JSON/YAML manifest，支持单任务和 `jobs` 批量任务。
+- **TTS**：本地 IndexTTS；适配、发现、健康检查、job 转换和缓存由本仓库负责，不接入云 TTS。
+- **IndexTTS 边界**：不复制源码、模型或 `.venv`；通过 `E:\index-tts`、`HEYROUTE_INDEXTTS_HOME` 或 manifest 配置接入。
+- **Agent 接口**：`doctor`、`validate`、`build`、`tts doctor`、`tts bootstrap`，支持 JSON 结果和 JSONL 事件。
+- **发布范围**：只生成 MP4、封面、音频、SRT/VTT、标题、简介、标签和构建报告，不自动上传。
+- **首版不做**：dashboard、MCP server、云 TTS、多平台发布器、远程任务队列和 HeyNews 专用强耦合转换。
 
-### 1. 核心技术栈
-
-- **Python（推荐）**：最容易复用现有 `ahe-ai-video-workflow`、Whisper、Pillow 和 FFmpeg 经验。
-- TypeScript/Bun：CLI 体验好，但媒体和语音生态需要重新评估。
-- 混合：Python 负责媒体内核，TypeScript 做 CLI/界面，能力强但维护成本最高。
-
-### 2. 第一条必须跑通的链路
-
-- **HeyNews 竖屏新闻视频（推荐）**：直接验证当前真实需求，9:16、PPT 页面、配音、字幕、PNG/MP4。
-- 通用图文讲解视频：更通用，但首个验收样例离现有业务更远。
-- 两者同时做：早期抽象更完整，但第一版交付会变慢。
-
-### 3. 输入格式
-
-- **JSON/YAML manifest（推荐）**：适合程序批量生成和版本管理。
-- Markdown + front matter：更适合人工编辑，但复杂时间线表达较弱。
-- 两者都支持：体验最好，但要维护双向解析和一致性测试。
-
-### 4. TTS 范围
-
-- **先支持导入音频 + provider 接口（推荐）**：核心可离线测试，不锁定供应商。
-- 首版直接接入一个本地 TTS：开箱即用，但安装和模型体积更重。
-- 首版直接接入云 TTS：音质稳定，但需要 API key 和成本控制。
-
-### 5. 发布边界
-
-- **首版只生成发布包（推荐）**：视频、封面、字幕、标题、简介和 manifest，风险最低。
-- 同时加入 Bilibili 发布器：更快形成完整闭环，但平台维护成本高。
-- 从一开始做多平台：覆盖广，但会拖慢核心工具稳定性。
+详细字段定义见 [`docs/manifest-v1.md`](docs/manifest-v1.md)，IndexTTS 许可和运行边界见 [`docs/indextts.md`](docs/indextts.md)。
 
 ## 验收标准（Phase 1）
 
@@ -106,4 +85,3 @@
 - 缺素材、缺音频、FFmpeg 失败时返回明确错误，不生成假成功结果
 - 示例项目不包含真实账号、Cookie、私有 URL 或受限素材
 - Windows CI 至少完成 manifest、时间线和校验层测试；FFmpeg 集成测试可按环境标记
-

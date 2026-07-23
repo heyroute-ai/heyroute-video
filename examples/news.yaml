@@ -1,0 +1,39 @@
+version: 1
+job_id: "example-news"
+profile: "vertical-news-1080x1920"
+output:
+  directory: "./output/example-news"
+  width: 1080
+  height: 1920
+  fps: 30
+voice:
+  provider: "fake"
+  language: "zh-CN"
+scenes:
+  - id: "cover"
+    visual:
+      type: "color"
+      color: "#173f46"
+    duration: 2
+    layout: "cover"
+  - id: "news-01"
+    visual:
+      type: "color"
+      color: "#dfeeea"
+    voiceover:
+      text: "这是一个不依赖云端服务的本地视频生产示例。Agent 只需要提交 manifest，就能得到成片、字幕和发布包。"
+    layout: "evidence"
+    source:
+      name: "heyroute-video example"
+      url: "https://github.com/heyroute-ai/heyroute-video"
+  - id: "news-02"
+    visual:
+      type: "color"
+      color: "#f1c48b"
+    voiceover:
+      text: "相同的输入可以重复运行，已有音频和产物会被复用，失败会留下结构化报告，方便 Agent 判断下一步。"
+    layout: "editorial"
+publish:
+  title: "heyroute-video 本地批量生产示例"
+  description: "由 JSON/YAML manifest 驱动的竖屏视频示例。"
+  tags: ["AI", "视频生产", "自动化"]
